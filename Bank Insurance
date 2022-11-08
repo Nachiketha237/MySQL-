@@ -1,0 +1,42 @@
+create database 1BM21CS109_Insurance;
+use  1BM21CS109_Insurance;
+create table Person
+(
+ driver_id varchar(20),
+ name_ varchar(20),
+ address_ varchar(40),
+ primary key(driver_id)
+ );
+ create table Car
+ (
+  reg_num varchar(20),
+  model varchar(20),
+  year_ int,
+  primary key(reg_num)
+  );
+  Create table Owns
+  (
+   driver_id varchar(20),
+   reg_num varchar(20),
+   primary key(driver_id,reg_num),
+   foreign key(driver_id) references Person(driver_id),
+   foreign key(reg_num) references Car(reg_num)
+   );
+   create table Accident
+   (
+    report_num varchar(20),
+    accident_date date,
+    location varchar(40),
+     primary key(report_num)
+    );
+   Create Table Participated
+   (   
+    driver_id varchar(20),
+    reg_num varchar(20),
+    report_num varchar(20),
+    damage_amount int,
+    primary key(driver_id ,reg_num,report_num),
+	  foreign key(driver_id) references Person(driver_id),
+    foreign key(reg_num) references Car(reg_num),
+    foreign key(report_num) references Accident(report_num)
+   );
