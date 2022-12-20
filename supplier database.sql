@@ -84,7 +84,7 @@ select * from Catalog;
 					from parts p
 					where not exists(select c.*
                                      from Catalog c
-                                     where s.sid=c.sid and p.pid=c.pid));
+                                     where c.sid=s.sid and p.pid=c.pid));
                                
 #todo 5:
 
@@ -94,7 +94,7 @@ select distinct(sname)
 					from parts p
 					where not exists(select c.*
                                      from Catalog c
-                                     where s.sid=c.sid and p.pid=c.pid )and p.color='Red');
+                                     where c.sid=s.sid and p.pid=c.pid )and p.color='Red');
                                      
                                      
 #tod0 6:
