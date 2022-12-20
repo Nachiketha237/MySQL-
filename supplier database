@@ -26,8 +26,10 @@ create table Catalog(
  cost int,
  foreign key(pid) references parts(pid),
  foreign key(sid) references Supplier(sid)
+ on delete cascade on update cascade
 )
-select * from parts;
+select * from Catalog;
+
 -- inserting into Supplier table --
 insert into Supplier 
 values('10001','Eren Yeager','Bangalore'),
@@ -60,24 +62,63 @@ values ('10001','20001','30'),
        ('10004','20003','15');
 select * from Catalog;
  
- 
+
 
 --     week 7 todo queries   --
 
  #todo 3:
  
- select distinct(p.pname)
- from parts p,Catalog c
- where p.pid=c.pid;
+ select distinct(pname)
+ from parts 
+ where pid=some(select pid 
+			    from Catalog);
  
  #todo 4:
   -- before running query delete a tuple from table parts so that query gives output --
-  --  delete from parts  --
-  --  where pid='20006';  --
+  -- delete from parts -- 
+  -- where pid='20006';  --
   
-  select distinct(s.sname)
-  from Supplier s,Catalog c
-  where s.sid=c.sid and c.pid=all(select pid
-								   from parts);
+  select distinct(sname)
+  from supplier s
+  where  not exists(select p.pid
+					from parts p
+					where not exists(select c.*
+                                     from Catalog c
+                                     where s.sid=c.sid and p.pid=c.pid));
                                
-								
+#todo 5:
+
+select distinct(sname)
+  from supplier s
+  where  not exists(select p.pid,p.color
+					from parts p
+					where not exists(select c.*
+                                     from Catalog c
+                                     where s.sid=c.sid and p.pid=c.pid )and p.color='Red');
+                                     
+#todo 6:
+select c.pid,p.pname
+from parts p,Catalog c,Supplier s
+where c.pid=p.pid and c.sid=s.sid and s.sname='Eren Yeager'
+group by c.pid
+having count(*)=1;
+   
+-- select p.pname
+-- from parts p
+-- where not exists(select s.sname
+--              from Supplier s
+--              where not exists(select c.*
+--                            from Catalog c
+--                            where c.sid=s.sid and c.pid=p.pid and 1=(select count(distinct c.pid)
+--                                                                     from Catalog c)
+--                            group by c.pid)and s.sname='Eren Yeager');
+             
+
+#todo 7:
+
+
+           
+           
+#todo 8:
+
+ 
