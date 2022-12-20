@@ -75,8 +75,8 @@ select * from Catalog;
  
  #todo 4:
   -- before running query delete a tuple from table parts so that query gives output --
-  -- delete from parts -- 
-  -- where pid='20006';  --
+--   delete from parts  --
+--   where pid='20006';  --
   
   select distinct(sname)
   from supplier s
@@ -96,29 +96,38 @@ select distinct(sname)
                                      from Catalog c
                                      where s.sid=c.sid and p.pid=c.pid )and p.color='Red');
                                      
-#todo 6:
-select c.pid,p.pname
-from parts p,Catalog c,Supplier s
-where c.pid=p.pid and c.sid=s.sid and s.sname='Eren Yeager'
-group by c.pid
-having count(*)=1;
-   
--- select p.pname
--- from parts p
--- where not exists(select s.sname
---              from Supplier s
---              where not exists(select c.*
---                            from Catalog c
---                            where c.sid=s.sid and c.pid=p.pid and 1=(select count(distinct c.pid)
---                                                                     from Catalog c)
---                            group by c.pid)and s.sname='Eren Yeager');
-             
-
+                                     
+#tod0 6:
+select  pname
+from parts 
+where pid in(select pid
+			from Catalog 
+            where sid in(select sid 
+						  from supplier
+                          where sname="Eren Yeager"))
+	and pid not in(select pid
+			from Catalog 
+            where sid in(select sid 
+						  from supplier
+                          where sname!="Eren Yeager"));
+                                     
 #todo 7:
+ select s.sid,s.sname
+ from Supplier s,Catalog c
+ where c.sid=s.sid and c.cost>(select avg(c1.cost)
+							   from Catalog c1
+                               where c.pid=c1.pid
+                               group by c1.pid);
+
+
 
 
            
            
 #todo 8:
-
- 
+select s.sid,s.sname
+ from Supplier s,Catalog c
+ where c.sid=s.sid and c.cost=(select max(c1.cost)
+							   from Catalog c1
+                               where c.pid=c1.pid
+                               group by c1.pid);
