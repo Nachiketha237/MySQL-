@@ -22,6 +22,15 @@ create table aircraft(
  primary key(aid)
 );
 
+-- cretaing Employee table --
+
+create table employee(
+ eid int,
+ ename varchar(20),
+ salary int,
+ primary key(eid)	
+);
+
 -- creating certified table --
 
 create table certified(
@@ -31,14 +40,6 @@ create table certified(
  foreign key (eid)references employee(eid)
 );
 
--- cretaing Employee table --
-
-create table employee(
- eid int,
- ename varchar(20),
- salary int,
- primary key(eid)	
-);
 
 -- inserting elements into tables --
 
@@ -90,3 +91,48 @@ insert into aircraft values
  
  
  -- week 8 queries --
+ 
+ #todo1
+ 
+ select a.aname
+ from aircraft a,certified c,employee e
+ where  c.eid=e.eid and e.salary>80000  and c.aid=a.aid;
+ 
+ #todo2
+ select c.eid, max(a.cruising_range) 
+ from certified c, aircraft a 
+ where c.aid=a.aid
+ group by eid 
+ having count(eid)>=3;
+  
+  #todo3
+  select ename 
+  from employee
+  where  salary<(select min(price)
+                   from flight
+                   where ffrom='Bangalore'and tto='Frankurt');
+                   
+#todo4
+
+select a.aid,a.aname, avg(e.salary) 
+from aircraft a, employee e, certified c 
+where a.aid in(select aid 
+			   from aircraft 
+               where cruising_range>=1000) and a.aid=c.aid and c.eid=e.eid group by aid, aname;
+               
+#todo5
+
+select ename 
+from employee 
+where eid in (select c.eid 
+              from certified c, aircraft a 
+              where a.aid=c.aid and a.aname='Boeing');
+              
+#todo6
+
+
+select a.aid 
+from aircraft a
+where a.cruising_range>=(select distance 
+						from flight 
+						where ffrom='Bangalore'and tto='New Delhi');
